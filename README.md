@@ -72,5 +72,8 @@ java -cp bin InterfazPrestamo
 
 ## 👤 Autor
 
-Creado por Luis Alba Goz
-# SimuladorPrestamos
+Creado por Luis Alberto Batalla Gonzalez
+
+## Link Repositorio
+
+https://github.com/LuisAlbertoB/SimuladorPrestamos.git
