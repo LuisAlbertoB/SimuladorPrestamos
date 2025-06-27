@@ -8,15 +8,15 @@ public class InterfazPrestamo extends JFrame {
 
     public InterfazPrestamo() {
         setTitle("Simulador de Préstamos MXN");
-        setSize(400, 400);
+        setSize(450, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(6, 2));
+        setLayout(new GridLayout(7, 2));
 
         tfMonto = new JTextField();
         tfAnticipo = new JTextField();
         tfTasa = new JTextField();
         tfPlazo = new JTextField();
-        resultado = new JTextArea(6, 30);
+        resultado = new JTextArea(10, 30);
         resultado.setEditable(false);
 
         add(new JLabel("Monto del préstamo (MXN):"));
@@ -31,7 +31,7 @@ public class InterfazPrestamo extends JFrame {
         add(new JLabel("Plazo en años (1-30):"));
         add(tfPlazo);
 
-        JButton calcular = new JButton("Calcular");
+        JButton calcular = new JButton("Calcular préstamo");
         add(calcular);
 
         calcular.addActionListener(new ActionListener() {
@@ -45,17 +45,34 @@ public class InterfazPrestamo extends JFrame {
     }
 
     private void calcularPrestamo() {
-        double monto = Double.parseDouble(tfMonto.getText());
-        double anticipo = Double.parseDouble(tfAnticipo.getText());
-        double tasa = Double.parseDouble(tfTasa.getText());
-        int plazo = Integer.parseInt(tfPlazo.getText());
+        try {
+            double monto = Double.parseDouble(tfMonto.getText());
+            double anticipo = Double.parseDouble(tfAnticipo.getText());
+            double tasa = Double.parseDouble(tfTasa.getText());
+            int plazo = Integer.parseInt(tfPlazo.getText());
 
-        Prestamo prestamo = new Prestamo(monto, anticipo, tasa, plazo);
+            Prestamo prestamo = new Prestamo(monto, anticipo, tasa, plazo);
 
-        resultado.setText("Monto financiado: $" + String.format("%.2f MXN", prestamo.getMontoFinanciado()) +
-                "\nCuota mensual: $" + String.format("%.2f MXN", prestamo.calcularCuotaMensual()) +
-                "\nTotal a pagar: $" + String.format("%.2f MXN", prestamo.calcularTotalAPagar()) +
-                "\nIntereses totales: $" + String.format("%.2f MXN", prestamo.calcularInteresesTotales()));
+            double mensualidad = prestamo.calcularCuotaMensual();
+            double total = prestamo.calcularTotalAPagar();
+            double intereses = prestamo.calcularInteresesTotales();
+            double montoFinanciado = prestamo.getMontoFinanciado();
+
+            double tasaMensual = tasa / 100 / 12;
+            double valorPresente = montoFinanciado;
+            int n = plazo * 12;
+            double cuotaJusta = prestamo.calcularCuotaPagoJusto(valorPresente, tasaMensual, n);
+
+            resultado.setText("Resumen del préstamo:\n");
+            resultado.append("Monto financiado: $" + String.format("%.2f", montoFinanciado) + "\n");
+            resultado.append("Cuota mensual estándar: $" + String.format("%.2f", mensualidad) + "\n");
+            resultado.append("Cuota mensual (pago justo): $" + String.format("%.2f", cuotaJusta) + "\n");
+            resultado.append("Total a pagar: $" + String.format("%.2f", total) + "\n");
+            resultado.append("Intereses totales: $" + String.format("%.2f", intereses) + "\n");
+
+        } catch (NumberFormatException ex) {
+            resultado.setText("Error: Verifica que los datos ingresados sean válidos numéricamente.");
+        }
     }
 
     public static void main(String[] args) {
