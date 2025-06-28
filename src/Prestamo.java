@@ -1,8 +1,8 @@
-public class Prestamo {
+class Prestamo {
     private double monto;
     private double anticipo;
-    private double tasaInteres; // anual
-    private int plazo; // en años
+    private double tasaInteres;
+    private int plazo;
 
     public Prestamo(double monto, double anticipo, double tasaInteres, int plazo) {
         this.monto = monto;
@@ -15,11 +15,18 @@ public class Prestamo {
         return monto - anticipo;
     }
 
+    public int getPlazo() {
+        return plazo;
+    }
+
+    public double getTasaMensual() {
+        return (tasaInteres / 100) / 12;
+    }
+
     public double calcularCuotaMensual() {
         double P = getMontoFinanciado();
-        double i = (tasaInteres / 100) / 12;
+        double i = getTasaMensual();
         int n = plazo * 12;
-
         return (P * i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
     }
 
